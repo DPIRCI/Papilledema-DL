@@ -137,7 +137,7 @@ def train_model(model_name):
         val_ds = create_dataset(val_paths, val_lbls, num_classes, is_training=False)
         
         # Build Model in Strategy
-        model = build_compiled_model(model_name, strategy, lr=config['hyperparameters']['learning_rate_phase1'])
+        model = build_compiled_model(model_name, strategy, learning_rate=config['hyperparameters']['learning_rate_phase1'])
         
         # Callbacks Phase 1
         callbacks_ph1 = [
