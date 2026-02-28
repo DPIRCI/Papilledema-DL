@@ -111,11 +111,12 @@ def create_dataset(filepaths, labels, num_classes, is_training=True):
 # 5. Training Loop
 def train_model(model_name):
     # Setup Wandb
+    # Mode="disabled" prevents it from freezing on login prompts while still allowing the WandbCallback to run cleanly
     wandb.init(project=config['wandb']['project_name'], 
                entity=config['wandb']['entity'],
                name=f"{model_name}-KFold",
                config=config,
-               anonymous="allow")
+               mode="disabled")
     
     strategy = get_strategy()
     
