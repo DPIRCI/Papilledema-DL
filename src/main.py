@@ -72,8 +72,10 @@ with open("config.yaml", "r") as f:
     config = yaml.safe_load(f)
 
 # Optional: Run only a specific model to save Colab Time
-# train_model("MobileNetV2") # Uncomment to test MobileNet
-# train_model("EfficientNetB4") # Heavy! Needs GPU/TPU
+print("\n🔥 STARTING EXPERIMENT RUN (MobileNetV2) 🔥")
+train_model("MobileNetV2") # Uncomment to test MobileNet
+print("\n🔥 STARTING EXPERIMENT RUN (EfficientNetB4) 🔥")
+train_model("EfficientNetB4") # Heavy! Needs GPU/TPU
 # train_model("ViT") # vit-keras required
 
 # %%

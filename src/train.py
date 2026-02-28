@@ -114,7 +114,8 @@ def train_model(model_name):
     wandb.init(project=config['wandb']['project_name'], 
                entity=config['wandb']['entity'],
                name=f"{model_name}-KFold",
-               config=config)
+               config=config,
+               anonymous="allow")
     
     strategy = get_strategy()
     
