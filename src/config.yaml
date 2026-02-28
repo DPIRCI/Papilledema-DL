@@ -1,0 +1,42 @@
+# Project Configuration
+
+paths:
+  original_data: "/content/raw_data"
+  split_data: "/content/dataset_split"
+  train_dir: "/content/dataset_split/train"
+  val_dir: "/content/dataset_split/val"
+  test_dir: "/content/dataset_split/test"
+  model_save_dir: "/content/models"
+  logs_dir: "/content/logs"
+
+hyperparameters:
+  img_size: [224, 224]
+  batch_size: 32
+  learning_rate_phase1: 0.0001
+  learning_rate_phase2: 0.00001
+  epochs_phase1: 20
+  epochs_phase2: 15
+  k_folds: 5 # 5-Fold Stratified CV
+  seed: 1337
+
+focal_loss:
+  alpha: 0.25
+  gamma: 2.0
+
+wandb:
+  project_name: "papilledema-dl"
+  entity: null # Change to your WandB username if necessary
+
+models:
+  - name: "MobileNetV2"
+    enabled: true
+  - name: "DenseNet121"
+    enabled: true
+  - name: "EfficientNetB0"
+    enabled: true
+  - name: "EfficientNetB3"
+    enabled: true
+  - name: "EfficientNetB4"
+    enabled: true
+  - name: "ViT" # using vit-keras
+    enabled: true

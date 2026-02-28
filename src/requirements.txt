@@ -1,0 +1,16 @@
+tensorflow>=2.10.0
+tensorflow-addons>=0.20.0
+opencv-python>=4.8.0
+numpy>=1.23.0
+pandas
+matplotlib
+seaborn
+scikit-learn
+skimage
+pyyaml
+wandb
+shap
+vit-keras
+split-folders
+kagglehub
+gradio
