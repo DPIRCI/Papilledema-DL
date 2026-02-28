@@ -91,21 +91,17 @@ def build_compiled_model(model_name, strategy, learning_rate=0.0001):
     with strategy.scope():
         model = get_model(model_name)
         
-        # We're importing addons locally here to ensure the scope resolves
-        try:
-            import tensorflow_addons as tfa
-            loss_fn = tfa.losses.SigmoidFocalCrossEntropy(
-                alpha=0.25, gamma=2.0, from_logits=False
-            )
-            # If using categorical crossentropy target, focal needs integer arrays or one-hot
-            # We assume one-hot inputs based on ImageDataGenerator class_mode='categorical'
-        except ImportError:
-            print("Warning: tensorflow_addons not found. Installing focal loss is necessary. Falling back to CategoricalCrossentropy.")
-            loss_fn = 'categorical_crossentropy'
+        # Removed tensorflow_addons. Focal Loss needs to be implemented manually or use alternative
+        def focal_loss_custom(alpha=0.25, gamma=2.0):
+            def loss(y_true, y_pred):
+                # Basic focal loss equivalent for categorical_crossentropy
+                cce = tf.keras.losses.categorical_crossentropy(y_true, y_pred)
+                pt = tf.math.exp(-cce)
+                focal_loss = alpha * tf.math.pow((1 - pt), gamma) * cce
+                return focal_loss
+            return loss
 
-        optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
-        
         model.compile(optimizer=optimizer,
-                      loss=loss_fn,
+                      loss=focal_loss_custom(alpha=0.25, gamma=2.0),
                       metrics=['accuracy', tf.keras.metrics.AUC(name='auc')])
     return model

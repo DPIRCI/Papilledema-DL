@@ -5,7 +5,6 @@ import tensorflow as tf
 from sklearn.model_selection import StratifiedKFold
 import wandb
 from wandb.keras import WandbCallback
-import tensorflow_addons as tfa
 
 # Local imports
 from models import build_compiled_model
@@ -159,14 +158,23 @@ def train_model(model_name):
         for layer in base_model.layers[:fine_tune_at]: 
              layer.trainable = False
              
+        # Build custom focal loss
+        def focal_loss_custom(alpha=0.25, gamma=2.0):
+            def loss(y_true, y_pred):
+                cce = tf.keras.losses.categorical_crossentropy(y_true, y_pred)
+                pt = tf.math.exp(-cce)
+                focal_loss = alpha * tf.math.pow((1 - pt), gamma) * cce
+                return focal_loss
+            return loss
+
         # Re-compile
         model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=config['hyperparameters']['learning_rate_phase2']),
-                      loss=tfa.losses.SigmoidFocalCrossEntropy(alpha=config['focal_loss']['alpha'], gamma=config['focal_loss']['gamma']),
+                      loss=focal_loss_custom(alpha=config['focal_loss']['alpha'], gamma=config['focal_loss']['gamma']),
                       metrics=['accuracy', tf.keras.metrics.AUC(name='auc')])
                       
         callbacks_ph2 = [
             tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True),
-            tfa.callbacks.SWA(start_epoch=3, swa_learning_rate=1e-5), # SWA Callback integration
+            # Removed SWA as tfa is unsupported. Use ModelCheckpoint as primary tracker.
             tf.keras.callbacks.ReduceLROnPlateau(monitor="val_loss", factor=0.2, patience=2),
             tf.keras.callbacks.ModelCheckpoint(filepath=os.path.join(config['paths']['model_save_dir'], f"{model_name}_fold{fold_no}.keras"),
                                                save_best_only=True),
