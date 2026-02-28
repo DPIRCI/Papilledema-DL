@@ -4,7 +4,7 @@ import numpy as np
 import tensorflow as tf
 from sklearn.model_selection import StratifiedKFold
 import wandb
-from wandb.keras import WandbCallback
+from wandb.integration.keras import WandbCallback
 
 # Local imports
 from models import build_compiled_model
