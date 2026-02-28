@@ -7,9 +7,9 @@
 """
 
 # %%
-# 1. Environment Setup & Autoreload
-%load_ext autoreload
-%autoreload 2
+# 1. Environment Setup
+# Note: %load_ext autoreload and %autoreload 2 are Jupyter/Colab magic commands 
+# and cannot run when you use !python main.py. If pasting into a Colab cell, you can uncomment them.
 
 import os
 import kagglehub
